@@ -2,7 +2,6 @@ import apiClient from '@/src/components/lib/apiClient';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React from 'react'
 import { PostType, Profile } from '@/styles/types';
-import Image from 'next/image';
 
 type Props = {
   profile: Profile;
