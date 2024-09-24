@@ -28,7 +28,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
 
         router.push("/");
-    }catch (err) {
+    }catch {
         alert("入力内容が正しくありません")
     }
     

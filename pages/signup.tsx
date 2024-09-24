@@ -21,7 +21,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             password
         });
         router.push("/login");
-    }catch (err) {
+    }catch{
         alert("入力内容が正しくありません")
     }
     

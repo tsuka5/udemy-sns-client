@@ -1,15 +1,15 @@
 import apiClient from '@/src/components/lib/apiClient';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React from 'react'
 import { PostType, Profile } from '@/styles/types';
-import { profile } from 'console';
+import Image from 'next/image';
 
 type Props = {
   profile: Profile;
   posts: PostType[];
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const { userId } = context.query;
   try {
     const profileResponse = await apiClient.get(`/users/profile/${userId}`);
@@ -48,7 +48,7 @@ const UserProfile = ({profile, posts}: Props) => {
       </div>
     </div>
     {posts.map((post: PostType) => (
-    <div className="bg-white shadow-md rounded p-4 mb-4">
+    <div className="bg-white shadow-md rounded p-4 mb-4" key={post.id}>
       <div className="mb-4">
         <div className="flex items-center mb-2">
           <img className="w-10 h-10 rounded-full mr-2" alt="User Avatar" src={profile.profileImageUrl} />

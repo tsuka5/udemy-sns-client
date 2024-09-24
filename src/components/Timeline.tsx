@@ -14,7 +14,7 @@ function Timeline() {
       });
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostText('');
-    }catch (err) {
+    }catch {
       alert('送信に失敗しました');
     }
   }
