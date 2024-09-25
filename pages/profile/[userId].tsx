@@ -2,38 +2,66 @@ import apiClient from '@/src/components/lib/apiClient';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React from 'react'
 import { PostType, Profile } from '@/styles/types';
+import EditableContent from '@/src/components/EditableContent';
 
 type Props = {
   profile: Profile;
   posts: PostType[];
 }
 
+
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const { userId } = context.query;
   try {
     const profileResponse = await apiClient.get(`/users/profile/${userId}`);
     const postsResponse = await apiClient.get(`/posts/${userId}`);
-    console.log(postsResponse.data);
     return {
       props: {
         profile: profileResponse.data.profile,
         posts: postsResponse.data
       }
-      
     }
-    
   }catch(err) {
     console.log("Error fetching profile:", err);
     return {
       notFound: true,
     }
   }
-  
 }
 
 
+
 const UserProfile = ({profile, posts}: Props) => {
-  // console.log(profile.user.username);
+
+  const handleDelete = async (postId: number) =>{
+    try {
+      const response = await apiClient.delete(`/users/profile/${profile.user.id}/${postId}`);
+      if(response.status === 200) {
+        window.location.reload();
+      }
+    }catch (err) {
+      console.log("Error deleting post:", err);
+    }
+
+  
+
+  }
+  
+  const handleEdit = async (postId: number, newContent: string) => {
+    try {
+      const response = await apiClient.put(`/users/profile/${profile.user.id}/${postId}`, {
+        content: newContent
+      });
+      if(response.status === 200) {
+        alert("投稿を編集しました");
+      }
+    }catch(err) {
+      console.log("Error editing post:", err);
+      alert("投稿の編集に失敗しました");
+    }
+  };
+
+
   return (
     <div className="container mx-auto px-4 py-8">
   <div className="w-full max-w-xl mx-auto">
@@ -56,8 +84,10 @@ const UserProfile = ({profile, posts}: Props) => {
             <p className="text-gray-500 text-sm">{new Date(post.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
-        <p className="text-gray-700">{post.content}</p>
+        <EditableContent post={post} onSave={(newContent) => handleEdit(post.id, newContent)} />
       </div>
+      <button onClick={() => handleDelete(post.id)} className="bg-red-500 text-white px-4 py-2 rounded">削除</button>
+
     </div>
       
     ))}
